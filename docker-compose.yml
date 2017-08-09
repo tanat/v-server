@@ -1,0 +1,13 @@
+version: '2'
+services:
+
+  website:
+    build: .
+    ports: 8003
+    volumes_from: data
+    env_file: .env
+    expose: 8003
+  data:
+    image: ubuntu:14.04.4
+    volumes:
+      - ./source:/var/www
