@@ -1,7 +1,8 @@
 const jwt = require('koa-jwt');
 const convert = require('koa-convert');
-const router =  require('koa-router');
+const Router =  require('koa-router');
 
+const recipesCtrls = require('./controllers/recipes');
 
 jwtConf = {
   key: process.env.JWT_KEY || 'key',
@@ -10,13 +11,14 @@ jwtConf = {
   alg: 'HS256'
 };
 
-const opts = {prefix: '/api'}
+const opts = {
+  prefix: '/api'
+};
 
-const publicRouter = router(opts);
-const privateRouter = router(opts);
+const apiRouter = Router(opts);
 
-
-privateRouter.use(async (ctx, next) => {
+/*
+apiRouter.use(async (ctx, next) => {
   try {
     const decoded = jwt.verify(ctx.headers.authorization, jwtConf.key);
     if (decoded.username !== undefined) {
@@ -31,3 +33,17 @@ privateRouter.use(async (ctx, next) => {
     ctx.throw(err, 401)
   }
 });
+*/
+
+/*
+const protectRoutes = convert(jwt({
+  secret: jwtConf.secret,
+  passthrough: true
+}))
+*/
+
+apiRouter.get('/recipes', recipesCtrls.getAll);
+
+module.exports = {
+  api: apiRouter.routes(),
+};
