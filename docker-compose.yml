@@ -3,11 +3,29 @@ services:
 
   website:
     build: .
-    ports: 8003
-    volumes_from: data
+    ports:
+     - "8003:8003"
+    volumes_from:
+      - data
     env_file: .env
-    expose: 8003
+    expose:
+      - "8003"
+
   data:
     image: ubuntu:14.04.4
     volumes:
       - ./source:/var/www
+
+  db:
+      image: postgres:9.6
+      volumes:
+        - ./pdata:/var/lib/postgresql
+        - ./pdata/data:/var/lib/postgresql/data
+      env_file: .env
+      logging:
+        driver: "json-file"
+        options:
+          max-size: 100m
+          max-file: "10"
+      ports:
+        - "5432:5432"
